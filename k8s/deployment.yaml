@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-api
+  labels:
+    app: web-api
+spec:
+  selector:
+    matchLabels:
+      app: web-api
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: web-api
+    spec:
+      containers:
+        - name: web-api
+          image: jdvincent/ai-example:latest
+          ports:
+            - name: web-api
+              containerPort: 8000
+              protocol: TCP
+          resources:
+            limits:
+              cpu: 4
+              memory: 4Gi
+              nvidia.com/gpu: 1
+            requests:
+              cpu: "1"
+              memory: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-api
+spec:
+  ports:
+    - port: 8000
+      targetPort: 8000
+      name: web-api
+  selector:
+    app: web-api
+  type: ClusterIP
