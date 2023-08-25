@@ -1,7 +1,5 @@
 FROM tensorflow/tensorflow:latest-gpu
 
-
-COPY trained_gpt2.keras .
 COPY main.py .
 
 # Add deadsnakes repo
@@ -21,6 +19,6 @@ RUN pip install git+https://github.com/keras-team/keras-nlp.git -q
 RUN unlink /usr/bin/python
 RUN ln -s /usr/bin/python3.10 /usr/bin/python
 
-RUN pip install fastapi uvicorn
+RUN pip install fastapi uvicorn boto3
 
 CMD uvicorn main:app --host 0.0.0.0 --port 8000

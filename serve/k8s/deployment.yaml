@@ -10,6 +10,8 @@ spec:
     matchLabels:
       app: web-api
   replicas: 1
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
@@ -17,19 +19,31 @@ spec:
     spec:
       containers:
         - name: web-api
-          image: jdvincent/ai-example:latest
+          image: jdvincent/serve-gpt2:latest
           ports:
             - name: web-api
               containerPort: 8000
               protocol: TCP
+          env:
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws-credentials
+                  key: aws_access_key_id
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: aws-credentials
+                  key: aws_secret_access_key
+            - name: AWS_SESSION_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: aws-credentials
+                  key: aws_session_token
           resources:
             limits:
-              cpu: 4
-              memory: 4Gi
               nvidia.com/gpu: 1
-            requests:
-              cpu: "1"
-              memory: 1Gi
+
 ---
 apiVersion: v1
 kind: Service

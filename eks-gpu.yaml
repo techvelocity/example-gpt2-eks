@@ -19,6 +19,8 @@ spec:
       labels:
         name: nvidia-device-plugin-ds
     spec:
+      nodeSelector: # Add this section to select nodes with GPUs
+        nvidia.com/gpu: "true"
       tolerations:
       # Allow this pod to be rescheduled while the node is in "critical add-ons only" mode.
       # This, along with the annotation above marks this pod as a critical add-on.

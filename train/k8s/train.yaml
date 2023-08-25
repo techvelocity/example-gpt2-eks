@@ -1,0 +1,37 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: gpt2-eks
+  labels:
+    app: gpt2-eks
+spec:
+  template:
+    metadata:
+      name: gpt2-eks
+      labels:
+        app: gpt2-eks
+    spec:
+      containers:
+        - name: train
+          image: jdvincent/train-gpt2:latest
+          env:
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws-credentials
+                  key: aws_access_key_id
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: aws-credentials
+                  key: aws_secret_access_key
+            - name: AWS_SESSION_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: aws-credentials
+                  key: aws_session_token
+          resources:
+            limits:
+              nvidia.com/gpu: 1
+      restartPolicy: Never
